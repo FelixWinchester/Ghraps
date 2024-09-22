@@ -73,15 +73,35 @@ public class Graph {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue; // Пропуск пустых строк
+                }
+
                 String[] parts = line.split(":");
+                if (parts.length < 2) {
+                    System.err.println("Некорректная строка: " + line);
+                    continue; // Пропуск некорректных строк
+                }
+
                 int vertex = Integer.parseInt(parts[0].trim());
-                String[] edges = parts[1].trim().split(",");
-                for (String edge : edges) {
-                    addEdge(vertex, Integer.parseInt(edge.trim()));
+
+                // Добавление вершины без рёбер
+                addVertex(vertex);
+
+                // Проверка на наличие рёбер после двоеточия
+                if (!parts[1].trim().isEmpty()) {
+                    String[] edges = parts[1].trim().split(",");
+                    for (String edge : edges) {
+                        if (!edge.trim().isEmpty()) {
+                            addEdge(vertex, Integer.parseInt(edge.trim()));
+                        }
+                    }
                 }
             }
         }
     }
+
+
 
     // Вложенный класс для представления рёбер графа
     public static class Edge {
