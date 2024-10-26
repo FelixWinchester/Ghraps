@@ -234,7 +234,7 @@ class Graph:
                         seen_edges.add(edge_key)
         return edge_list
 
-    def compare_outdegree(self, vertex):
+    def compare_outdegree(self, vertex): # Полустепень
         """
         Выводит вершины, полустепень исхода которых больше, чем у заданной вершины.
         """
@@ -250,7 +250,7 @@ class Graph:
             if len(self.adjacency_list[v]) > outdegree_vertex:
                 print(f"Вершина '{v}' имеет большую полустепень исхода ({len(self.adjacency_list[v])}).")
 
-    def find_loops(self):
+    def find_loops(self): # Поиск петлей
         """
         Выводит вершины, в которых есть петли (ребро, начинающееся и заканчивающееся в одной и той же вершине).
         """
@@ -261,7 +261,7 @@ class Graph:
         else:
             print("В графе нет вершин с петлями.")
 
-    def remove_hanging_vertices(self):
+    def remove_hanging_vertices(self): # Висячие вершины
         """
         Удаляет висячие вершины (те, у которых степень 1) из графа.
         Возвращает новый граф, где висячие вершины удалены.
@@ -350,6 +350,7 @@ def console_interface():
         print("10. Выполнить дополнительную задачу 1")
         print("11. Выйти")
         print("12. Найти вершины с петлями")  # Новый пункт
+        print("13. Удалить висячие вершины")  # Новый пункт для задачи удаления висячих вершин
 
         green = "\033[32m"
         choice = input(f"{green}Введите номер действия: ").strip()
@@ -445,10 +446,16 @@ def console_interface():
         elif choice == '12':
             graph.find_loops()
 
+        elif choice == '13':
+            new_graph = graph.remove_hanging_vertices()
+            print("\nГраф без висячих вершин:")
+            new_graph.display_adjacency_list()
+
         else:
             print("Некорректный ввод.")
 
     print("Завершение работы.")
+
 
 def create_new_graph():
     # Запрашиваем тип графа у пользователя
