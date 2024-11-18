@@ -181,27 +181,29 @@ class Graph:
             print(f"Вершина {u} не существует.")
 
     def save_to_file(self, filename):
-        with open(filename, 'w') as file:
-            type_line = ""
-            if self.directed and self.weighted:
-                type_line = "directed weighted"
-            elif self.directed and not self.weighted:
-                type_line = "directed unweighted"
-            elif not self.directed and self.weighted:
-                type_line = "undirected weighted"
-            else:
-                type_line = "undirected unweighted"
-            file.write(f"{type_line}\n")
-            for vertex in self.adjacency_list:
-                if not self.adjacency_list[vertex]:
-                    file.write(f"{vertex}\n")
-                else:
-                    for edge in self.adjacency_list[vertex]:
-                        if self.directed or (not self.directed and vertex < edge[0]):
-                            if self.weighted:
-                                file.write(f"{vertex} {edge[0]} {edge[1]}\n")
-                            else:
-                                file.write(f"{vertex} {edge[0]}\n")
+        try:
+            with open(filename, 'w') as file:
+                # Записываем тип графа
+                type_line = f"{'directed' if self.directed else 'undirected'} {'weighted' if self.weighted else 'unweighted'}\n"
+                file.write(type_line)
+
+                # Записываем вершины и рёбра
+                for vertex, edges in self.adjacency_list.items():
+                    if not edges:
+                        # Записываем вершину без рёбер
+                        file.write(f"{vertex}\n")
+                    else:
+                        for edge in edges:
+                            neighbor = edge[0]
+                            weight = edge[1] if self.weighted else None
+                            if self.directed or (not self.directed and vertex < neighbor):
+                                if self.weighted:
+                                    file.write(f"{vertex} {neighbor} {weight}\n")
+                                else:
+                                    file.write(f"{vertex} {neighbor}\n")
+            print(f"Граф успешно сохранён в файл '{filename}'.")
+        except Exception as e:
+            print(f"Ошибка при сохранении в файл: {e}")
 
     def __str__(self):
         # Вывод графа в виде строки с указанием весов рёбер, включая петли
